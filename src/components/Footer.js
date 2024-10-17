@@ -4,17 +4,15 @@ import ImageButton from "./ImageButton";
 
 function Footer() {
   const navigate = useNavigate();
-  
+
   return (
-      <div className="min-w-full h-24 bg-black items-center">
-        <div className="flex flex-row justify-center min-w-full h-24 bg-black items-center">
-          <ul className="flex flex-row justify-between text-white">
-            <li>
-              <ImageButton type="button" label="Filter" img={<IoAddSharp />} color="blue" onClick={() => navigate("/execute-operation")}/>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <div className="w-full h-16 bg-black flex items-center justify-center">
+      <ul className="flex items-center space-x-4 text-white">
+        <li>
+          <ImageButton type="button" label="Add" img={<IoAddSharp />} color="blue" onClick={() => navigate("/execute-operation")} />
+        </li>
+      </ul>
+    </div>
   );
 }
 

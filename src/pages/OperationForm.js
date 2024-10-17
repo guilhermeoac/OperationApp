@@ -12,16 +12,24 @@ function OperationForm() {
   const navigate = useNavigate();
   
   const executeOperation = useMutation(executeOperationApi, {
-    onSuccess: (data) => {
-      console.log(data);
-      navigate(`/record`)
+    onSettled: (data) => {
+      if ( data.success) {
+        navigate(`/record`)
+      } else {
+        toast(data.message);
+      }
     },
+
   })
 
 
   const submit = (e) => {
-    e.preventDefault()
-    executeOperation.mutateAsync({type: operation.type, firstParam: operation.firstParam, secondParam: operation.secondParam});
+    try {
+      e.preventDefault()
+      executeOperation.mutateAsync({type: operation.type, firstParam: operation.firstParam, secondParam: operation.secondParam});
+    } catch (error) {
+      console.log(error);
+    }
   }
   function handleChange(e) {
     setOperation({ ...operation, [e.target.name]: e.target.value })

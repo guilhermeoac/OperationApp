@@ -8,28 +8,35 @@ import ImageButton from "./ImageButton";
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const  {currentUser} = useSelector((state) => state.userReducer);
-  
-  
+  const { currentUser } = useSelector((state) => state.userReducer);
+
   return (
-      <div className="flex flex-row h-24 bg-black items-center">
-        <div className="justify-start h-24 bg-black items-center text-white">
-          <ImageButton type="button" label="Filter" img={<IoArrowBackSharp  />} color="black" onClick={() => navigate(-1)}/>
-        </div>
-        {currentUser?.payload && 
-        <div className="flex flex-row justify-end h-24 bg-black items-center">
-          <ul className="flex flex-row justify-end text-white">
-            {currentUser?.type === UserActionTypes.LOGIN && <li className="">
-              <span onClick={() => {
-                dispatch(logoutUser(UserActionTypes.LOGOUT))
-                setCookie('userToken', null)
-                setCookie('username', null)
-                navigate("/")
-              }}>Logout</span>
-            </li>}
-          </ul>
-        </div>}
+    <div className="flex justify-between items-center h-16 bg-black px-4">
+      <div className="flex items-center">
+        <ImageButton type="button" label="Filter" img={<IoArrowBackSharp />} color="black" onClick={() => navigate(-1)} />
       </div>
+      {currentUser?.payload && (
+        <div className="flex items-center">
+          <ul className="flex items-center text-white space-x-4">
+            {currentUser?.type === UserActionTypes.LOGIN && (
+              <li>
+                <span
+                  className="cursor-pointer hover:text-gray-400"
+                  onClick={() => {
+                    dispatch(logoutUser(UserActionTypes.LOGOUT));
+                    setCookie('userToken', null);
+                    setCookie('username', null);
+                    navigate("/");
+                  }}
+                >
+                  Logout
+                </span>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
 

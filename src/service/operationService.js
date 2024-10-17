@@ -10,9 +10,9 @@ export const executeOperationApi = async (body) => {
   try {
     const response = await axios.post(`${baseUrl}?type=${body.type}`, body, { headers: getAuthToken() })
     console.log(response.data)
-    return Promise.resolve(response.data)
+    return Promise.resolve({data: response.data, success: true})
   } catch (error) {
     console.log("error" + error)
-    return Promise.reject(error)
+    return {data: error.response.data, success: false}
   }
 }

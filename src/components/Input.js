@@ -1,18 +1,25 @@
-
-function Input({label, type, placeholder, onChange, value, name, disable, formHookProps, errorsProps}) {
+function Input({ label, type, placeholder, onChange, value, name, disable, formHookProps, errorsProps }) {
   return (
-    <div className="flex flex-row  justify-between w-72">
-      <label className="font-semibold">{label}:</label>
-      {formHookProps ? <input className="border-b-2 min-w-48" type={type} {...formHookProps}/> : <input
-          className="focus-visible:outline-none focus-visible:bg-gray-100 border-b-2 min-w-48 border-black"
-          type={type} 
-          placeholder={placeholder} 
-          onChange={onChange} 
+    <div className="flex flex-col w-full max-w-xs mb-4">
+      <label className="font-semibold mb-2 text-gray-700">{label}:</label>
+      {formHookProps ? (
+        <input
+          className="border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none py-2 px-3"
+          type={type}
+          {...formHookProps}
+        />
+      ) : (
+        <input
+          className="border-b-2 border-gray-300 focus:border-blue-500 focus:outline-none py-2 px-3"
+          type={type}
+          placeholder={placeholder}
+          onChange={onChange}
           value={value}
           name={name}
           disabled={disable}
-      ></input>}
-      {errorsProps}
+        />
+      )}
+      {errorsProps && <span className="text-red-500 text-sm mt-1">{errorsProps}</span>}
     </div>
   );
 }

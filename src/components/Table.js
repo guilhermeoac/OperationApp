@@ -3,79 +3,94 @@ import { useState } from 'react';
 import { BsArrowsVertical, BsArrowDown, BsArrowUp, BsSearch } from "react-icons/bs";
 import ImageButton from "./ImageButton";
 import Pagination from "../components/Pagination";
-import { useQuery } from 'react-query'
+import { useQuery } from 'react-query';
 import Loading from "./Loading";
 
-
-function Table({columns, endpoint, filter, handlerFilter, invalidateCacheParam}) {
+function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam }) {
   const [showFilter, setShowFilter] = useState(false);
   const [selectedLine, setSelectedLine] = useState({});
   const [applyFilter, setApplyFilter] = useState(true);
-  const {isLoading, data} = useQuery([invalidateCacheParam, applyFilter, filter.pageNumber, filter.sortDirection, filter.pageSize], async () => await endpoint(filter)) 
-  const orderStates = [ 'none', 'ASC', 'DESC']
+  const { isLoading, data } = useQuery([invalidateCacheParam, applyFilter, filter.pageNumber, filter.sortDirection, filter.pageSize], async () => await endpoint(filter));
+  const orderStates = ['none', 'ASC', 'DESC'];
 
   const nextOrder = (current, field) => {
     const index = orderStates.indexOf(current ?? 'none');
-    const nextItem = (index + 1)%(orderStates.length);
+    const nextItem = (index + 1) % (orderStates.length);
     const nextOrderDirection = orderStates[nextItem];
-    if('none' === nextOrderDirection) {
-      handlerFilter({ ...filter, 'sortDirection': null, 'sortField': null })
+    if ('none' === nextOrderDirection) {
+      handlerFilter({ ...filter, 'sortDirection': null, 'sortField': null });
     } else {
-      handlerFilter({ ...filter, 'sortDirection': nextOrderDirection, 'sortField': field })
+      handlerFilter({ ...filter, 'sortDirection': nextOrderDirection, 'sortField': field });
     }
-  }
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [month, day, year].join('/');
+  };
 
   if (isLoading) {
-    return <Loading/>
+    return <Loading />;
   }
+
   return (
-      <div className='flex flex-row justify-center p-4 min-w-max'>
-        <div className="flex flex-col" >
-          <div className="my-4">
-            {showFilter && <TableFilter 
-              columns={columns} 
-              filter={filter} 
-              handlerFilter={handlerFilter} 
-              setApplyFilter={setApplyFilter}
-              applyFilter={applyFilter} 
-            />}
-          </div>
-          <table className='bg-white border-solid border-gray-200 table-fixed border-collapse'>
-            <thead>
-              <tr key="0" >
-                {columns.map((column) =>
-                  <th className={`p-2 text-left border-2 w-${column.width}`} key={column.name}>
-                    <div className='flex flex-row justify-center' onClick={() => nextOrder(filter.sortDirection, column.name)}>
-                      <label>{column.label}</label>
-                      <div className='flex flex-col justify-center'>
+    <div className='flex flex-col items-center p-4'>
+      <div className="w-full max-w-6xl">
+        <div className="my-4">
+          {showFilter && <TableFilter columns={columns} filter={filter} handlerFilter={handlerFilter} setApplyFilter={setApplyFilter} applyFilter={applyFilter} />}
+        </div>
+        <div className='overflow-x-auto'>
+          <table className='min-w-full bg-white border border-gray-200 rounded-lg shadow-sm'>
+            <thead className='bg-gray-100'>
+              <tr>
+                {columns.map((column) => (
+                  <th className='p-4 text-left border-b border-gray-200' key={column.name}>
+                    <div className='flex items-center justify-between cursor-pointer' onClick={() => nextOrder(filter.sortDirection, column.name)}>
+                      <span>{column.label}</span>
+                      <div className='flex items-center'>
                         {filter.sortDirection === 'ASC' && filter.sortField === column.name && <BsArrowDown />}
                         {filter.sortDirection === 'DESC' && filter.sortField === column.name && <BsArrowUp />}
-                        {filter.sortField != column.name && <BsArrowsVertical />}
+                        {filter.sortField !== column.name && <BsArrowsVertical />}
                       </div>
-                    </div></th>
-                )}
+                    </div>
+                  </th>
+                ))}
               </tr>
             </thead>
-            {data.empty ? 
             <tbody>
-              <span>Nenhum Registro Encontrado</span>
-            </tbody> :
-            <tbody>
-                {data.content.map((item) =>
-                  <tr className={selectedLine.id === item.id ? 'bg-cyan-50' : ''} key={item.id} onClick={() => setSelectedLine(item)}>{columns.map((column) => 
-                    <td className="text-center border-2  w-6" key={column.name} >{item[column.name]}</td>
-                  )}</tr>
-                )}
-            </tbody>}
+              {data.empty ? (
+                <tr>
+                  <td colSpan={columns.length} className='text-center p-4'>Nenhum Registro Encontrado</td>
+                </tr>
+              ) : (
+                data.content.map((item) => (
+                  <tr className={`cursor-pointer ${selectedLine.id === item.id ? 'bg-cyan-50' : 'hover:bg-gray-50'}`} key={item.id} onClick={() => setSelectedLine(item)}>
+                    {columns.map((column) => (
+                      <td className='p-4 text-center border-b border-gray-200' key={column.name}>
+                        {column.name === 'date' ? formatDate(item[column.name]) : item[column.name]}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              )}
+            </tbody>
           </table>
-          <div className="flex flex-row justify-end">
-            <Pagination filter={filter} setPage={handlerFilter} lastPage={data.totalPages - 1} setPageSize={handlerFilter}/>
-          </div>
         </div>
-        <div className='flex flex-col p-5'>
-          <ImageButton type="button" label="Filter" img={<BsSearch />} color="gray" onClick={ () => setShowFilter(!showFilter)}/>
+        <div className="flex justify-end mt-4">
+          <Pagination filter={filter} setPage={handlerFilter} lastPage={data.totalPages - 1} setPageSize={handlerFilter} />
         </div>
       </div>
+      <div className='flex flex-col p-5'>
+        <ImageButton type="button" label="Filter" img={<BsSearch />} color="gray" onClick={() => setShowFilter(!showFilter)} />
+      </div>
+    </div>
   );
 }
 
