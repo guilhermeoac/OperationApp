@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getCookie } from 'react-use-cookie';
 import { BASE_URL } from './constants';
+import { ToastContainer, toast } from 'react-toastify';
 
 const getAuthToken = () => ({ Authorization: getCookie('userToken'), username: getCookie('username') })
 
@@ -17,9 +18,8 @@ export const getRecordListApi = async (filter) => {
       })
     } else urlParams = ""
     const response = await axios.get(baseUrl + urlParams, { headers: getAuthToken() })
-    return Promise.resolve(response.data)
+    return Promise.resolve({data: response.data, success: true})
   } catch (error) {
-    console.log("error" + error)
-    return Promise.reject(error)
+    return Promise.resolve({data: {empty: true, content: []}, error: error.response.data, status: error.response.status, success: false})
   }
 }

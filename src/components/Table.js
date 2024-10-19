@@ -5,12 +5,23 @@ import ImageButton from "./ImageButton";
 import Pagination from "../components/Pagination";
 import { useQuery } from 'react-query';
 import Loading from "./Loading";
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { Errorhandler } from './ErrorHandler'
 
 function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam }) {
+  const navigate = useNavigate();
   const [showFilter, setShowFilter] = useState(false);
   const [selectedLine, setSelectedLine] = useState({});
   const [applyFilter, setApplyFilter] = useState(true);
-  const { isLoading, data } = useQuery([invalidateCacheParam, applyFilter, filter.pageNumber, filter.sortDirection, filter.pageSize], async () => await endpoint(filter));
+  const { isLoading, data } = useQuery([invalidateCacheParam, applyFilter, filter.pageNumber, filter.sortDirection, filter.pageSize], async () => await endpoint(filter),{
+    onSettled: (data) => {
+      console.log(data);
+      if (!data.success) {
+        Errorhandler(data, navigate, toast);
+      }
+    }
+  });
   const orderStates = ['none', 'ASC', 'DESC'];
 
   const nextOrder = (current, field) => {
@@ -36,6 +47,18 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
     return [month, day, year].join('/');
   };
 
+  const formatFilterColumns = (columns) => {
+    console.log(columns)
+    console.log(columns.some((it) => it.name == "date"))
+
+    if(columns.some((it) => it.name == "date")) {
+      columns = columns.filter((it) => it.name != "date")
+      columns.push({"name": "beginDate", "label": "Inicial date"}, {"name": "endDate", "label": "End date"})
+    }
+    console.log(columns)
+    return columns;
+  }
+
   if (isLoading) {
     return <Loading />;
   }
@@ -44,7 +67,7 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
     <div className='flex flex-col items-center p-4'>
       <div className="w-full max-w-6xl">
         <div className="my-4">
-          {showFilter && <TableFilter columns={columns} filter={filter} handlerFilter={handlerFilter} setApplyFilter={setApplyFilter} applyFilter={applyFilter} />}
+          {showFilter && <TableFilter columns={formatFilterColumns(columns)} filter={filter} handlerFilter={handlerFilter} setApplyFilter={setApplyFilter} applyFilter={applyFilter} />}
         </div>
         <div className='overflow-x-auto'>
           <table className='min-w-full bg-white border border-gray-200 rounded-lg shadow-sm'>
@@ -65,12 +88,12 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
               </tr>
             </thead>
             <tbody>
-              {data.empty ? (
+              {data.data.empty ? (
                 <tr>
                   <td colSpan={columns.length} className='text-center p-4'>Nenhum Registro Encontrado</td>
                 </tr>
               ) : (
-                data.content.map((item) => (
+                data.data.content.map((item) => (
                   <tr className={`cursor-pointer ${selectedLine.id === item.id ? 'bg-cyan-50' : 'hover:bg-gray-50'}`} key={item.id} onClick={() => setSelectedLine(item)}>
                     {columns.map((column) => (
                       <td className='p-4 text-center border-b border-gray-200' key={column.name}>
@@ -84,7 +107,7 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
           </table>
         </div>
         <div className="flex justify-end mt-4">
-          <Pagination filter={filter} setPage={handlerFilter} lastPage={data.totalPages - 1} setPageSize={handlerFilter} />
+          <Pagination filter={filter} setPage={handlerFilter} lastPage={data.data.totalPages - 1} setPageSize={handlerFilter} />
         </div>
       </div>
       <div className='flex flex-col p-5'>

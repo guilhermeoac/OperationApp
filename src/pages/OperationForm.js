@@ -1,6 +1,7 @@
 import Input from "../components/Input";
 import TextButton from "../components/TextButton";
 import { useNavigate } from 'react-router-dom';
+import { Errorhandler } from './../components/ErrorHandler'
 import { useState } from 'react'
 import {
   useMutation
@@ -18,16 +19,7 @@ function OperationForm() {
       if (data.success) {
         navigate(`/record`)
       } else {
-        toast.error(data.data.message, {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "light",
-          });
+        Errorhandler(data, navigate, toast);
       }
     },
 
@@ -60,17 +52,7 @@ function OperationForm() {
   
   return (
     <>
-    <ToastContainer 
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        theme="light"/>
+    
     <div className="flex flex-row justify-center pt-10">
       <div className="flex flex-col justify-between rounded-md bg-white ring-2 min-w-max">
         <h3 className="font-bold text-lg text-center">Execute Operation</h3>

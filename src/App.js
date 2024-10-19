@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Record from './pages/Record';
 import Home from './pages/Home';
 import OperationForm from './pages/OperationForm';
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
   const queryClient = new QueryClient();
@@ -19,6 +20,17 @@ function App() {
       <div className='font-sans text-base bg-slate-100 min-w-min'>
         <Router>
         <Navbar/>
+        <ToastContainer 
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme="light"/>
           <Routes>
               <Route exact path="/" element={<Home/>}>
               </Route>

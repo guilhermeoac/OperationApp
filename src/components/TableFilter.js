@@ -17,7 +17,7 @@ function TableFilter({columns, filter, handlerFilter, applyFilter, setApplyFilte
         <div className="col-span-5">
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 place-items-start " >
             {columns.map((column) =>
-            <Input key={column.name} label={column.label} type="text" onChange={onChangeFilter} value={filter[column.name] ?? ""} name={column.name}/>)}
+            <Input key={column.name} label={column.label} type={["beginDate", "endDate"].includes(column.name) ? "date" : "text"} onChange={onChangeFilter} value={filter[column.name] ?? ""} name={column.name}/>)}
           </div>
         </div>
         <div className="place-self-center pl-6">

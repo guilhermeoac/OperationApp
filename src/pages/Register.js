@@ -4,18 +4,20 @@ import { signUpApi } from "../service/publicUserService";
 import Input from "../components/Input";
 import TextButton from "../components/TextButton";
 import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { Errorhandler } from './../components/ErrorHandler'
 
 function Register() {
   const navigate = useNavigate();
   const [user, setUser] = useState({ username: '', password: '' });
-  const [message, setMessage] = useState(null);
 
   const savePublicForm = useMutation(signUpApi, {
-    onSuccess: () => {
-      navigate(`/`);
-    },
-    onError: (data) => {
-      setMessage(data.response.data.message);
+    onSettled: (data) => {
+      if (data.success) {
+        navigate(`/`);
+      } else {
+        Errorhandler(data, navigate, toast);
+      }
     }
   });
 

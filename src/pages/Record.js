@@ -6,8 +6,12 @@ import { getUserByUsernameApi } from "../service/userService";
 import {
   useQuery
 } from 'react-query'
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { Errorhandler } from './../components/ErrorHandler'
 
 function Record() {
+  const navigate = useNavigate();
   const [balance, setBalance] = useState();
   const [filter, setFilter] = useState({name: null, alias: null, unity: null, pageNumber: 0, pageSize: 10});
 
@@ -16,8 +20,13 @@ function Record() {
   useQuery(["record"], async () => {
     return await getUserByUsernameApi()
   },{
-    onSuccess: (data) => {
-      setBalance(data.balance)
+    onSettled: (data) => {
+      if (data.success) {
+        setBalance(data.data.balance);
+      } else {
+        Errorhandler(data, navigate, toast);
+      }
+      
     }
   }) 
 

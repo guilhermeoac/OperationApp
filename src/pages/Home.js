@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
+import { Errorhandler } from './../components/ErrorHandler'
 import { useMutation } from "react-query";
 import useCookie from 'react-use-cookie';
 import { useDispatch } from "react-redux";
 import { loginUser, UserActionTypes } from "../redux/userReducer";
 import TextButton from "../components/TextButton";
 import { signInApi } from "../service/publicUserService";
+import { ToastContainer, toast } from 'react-toastify';
 
 function Home() {
 
@@ -25,18 +27,22 @@ function Home() {
   } = useForm()
   
   const login = useMutation(signInApi, {
-    onSuccess: (data) => {
-      console.log(data)
-      setUserToken(`Bearer ${data.data}`)
-      setUserName(watch("user"))
-      dispatch(loginUser({type: UserActionTypes.LOGIN, payload: {id: data.id, username: data.username, roles: data.roles, login: data.login, balance: data.balance}}))    
-      recordRoute()
+    onSettled: (response) => {
+      if (response.success) {
+        setUserToken(`Bearer ${response.data}`);
+        setUserName(watch("user"));
+        dispatch(loginUser({type: UserActionTypes.LOGIN, payload: {}}));    
+        recordRoute();
+      } else {
+        Errorhandler(response, navigate, toast);
+      }
+      
     },
   })
 
   const submitForm = (data) => login.mutateAsync(data)
   
-  const signIn = () => registerRoute()
+  const signUp = () => registerRoute()
   return (
     <div className="flex flex-row justify-center pt-10">
       <div className="flex flex-col rounded-md bg-white ring-2 min-w-96">
@@ -56,7 +62,7 @@ function Home() {
             <TextButton type="submit" label="Login" color="blue"/>
           </div>
         </form>
-        <span className="underline text-cyan-500 flex flex-row justify-center" onClick={signIn}>Do not have a login? Sign up</span>
+        <span className="underline text-cyan-500 flex flex-row justify-center" onClick={signUp}>Do not have a login? Sign up</span>
       </div>
     </div>
   );
