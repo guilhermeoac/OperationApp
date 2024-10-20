@@ -12,6 +12,6 @@ export const getUserByUsernameApi = async () => {
     return Promise.resolve({data: response.data, success: true})
   } catch (error) {
     console.log(error)
-    return {data: error.response.data, success: false}
+    return {data: error.response.data, status: error.response.status, success: false}
   }
 }

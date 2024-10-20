@@ -23,7 +23,7 @@ function Register() {
 
   const submit = (e) => {
     e.preventDefault();
-    savePublicForm.mutateAsync({ username: user.username, password: user.password });
+    savePublicForm.mutateAsync({ user: user.username, password: user.password });
   };
 
   function handleChange(e) {

@@ -20,6 +20,6 @@ export const getRecordListApi = async (filter) => {
     const response = await axios.get(baseUrl + urlParams, { headers: getAuthToken() })
     return Promise.resolve({data: response.data, success: true})
   } catch (error) {
-    return Promise.resolve({data: {empty: true, content: []}, error: error.response.data, status: error.response.status, success: false})
+    return Promise.resolve({data: {empty: true, content: []}, status: error.response.status, error: error.response.data, status: error.response.status, success: false})
   }
 }
