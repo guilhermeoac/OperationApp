@@ -35,8 +35,8 @@ function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center bg-gray-100 py-10">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md h-fit">
         <h3 className="text-2xl font-bold text-center text-gray-700">Register</h3>
         <form className="space-y-6" onSubmit={submit}>
           <Input name="username" type="text" placeholder="Username" label="Username" value={user.username} onChange={handleChange} />

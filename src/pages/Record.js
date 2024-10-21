@@ -36,10 +36,10 @@ function Record() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-start p-4 bg-gray-50 min-h-screen">
+    <div className="flex flex-col items-center justify-start p-4 bg-gray-50 min-h-screen gap-4">
       <h3 className="font-bold text-lg bg-white p-4 rounded-md shadow-md ring-2">Balance: {balance}</h3>
       <h3 className="font-bold text-lg">Records</h3>
-      <div className="flex flex-row flex-nowrap justify-center w-full">
+      <div className="grid gap-1 justify-center w-full">
         <Table 
           columns={columns}
           endpoint={endpoint}

@@ -63,8 +63,8 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
   }
 
   return (
-    <div className='flex flex-row items-start p-4'>
-      <div className='flex flex-col items-center p-4'>
+    <div className='flex flex-row items-start'>
+      <div className='flex flex-col items-center'>
         <div className="w-full max-w-6xl ">
           <div className="my-4">
             {showFilter && (
@@ -78,7 +78,7 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
             )}
           </div>
           <div className='overflow-x-auto'>
-            <table className='min-w-6x1 bg-white border border-gray-200 rounded-lg shadow-md'>
+            <table className='min-w-6x1 bg-white border border-gray-200 rounded-lg shadow-md w-full'>
               <thead className='bg-gray-100 rounded-t-lg'>
                 <tr>
                   {columns.map((column) => (

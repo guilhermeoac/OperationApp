@@ -50,9 +50,9 @@ function Home() {
   
   const signUp = () => registerRoute()
   return (
-    <div className="flex flex-row justify-center pt-10">
-      <div className="flex flex-col rounded-lg bg-white shadow-md p-8 max-w-md w-full">
-        <h3 className="font-bold text-lg flex flex-row justify-center mb-6">Sign in</h3>
+    <div className="flex justify-center py-10">
+      <div className="flex flex-col rounded-lg bg-white shadow-md p-8 max-w-md w-full h-fit">
+        <h3 className="font-bold text-2xl flex flex-row justify-center mb-6 text-gray-700">Sign in</h3>
         <form className="space-y-6" onSubmit={submitForm}>
           <Input name="username" type="text" placeholder="Username" label="Username" value={user.username} onChange={handleChange} />
           <Input name="password" type="password" placeholder="Password" label="Password" value={user.password} onChange={handleChange} />

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Errorhandler } from './../components/ErrorHandler';
 import { useMutation } from 'react-query';
 import { executeOperationApi } from "../service/operationService";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 function OperationForm() {
   const [operation, setOperation] = useState({ type: '', firstParam: '', secondParam: '' });
@@ -32,8 +32,8 @@ function OperationForm() {
 
   const isDisabled = (operation) => {
     console.log(operation);
-    var type = !(["ADDITION", "SUBTRACTION", "MULTIPLY", "DIVISION", "SQUARE_ROOT", "RANDOM_STRING"].includes(operation.type))
-    var fields = false
+    const type = !(["ADDITION", "SUBTRACTION", "MULTIPLY", "DIVISION", "SQUARE_ROOT", "RANDOM_STRING"].includes(operation.type))
+    let fields = false
     if(["ADDITION", "SUBTRACTION", "MULTIPLY", "DIVISION"].includes(operation.type)) {
         fields = operation.firstParam == null || operation.firstParam == '' || operation.secondParam == null || operation.secondParam == ''
     } else if (operation.type == "SQUARE_ROOT") {
@@ -44,8 +44,8 @@ function OperationForm() {
 
   return (
     <div className="flex flex-row justify-center pt-10">
-  <div className="flex flex-col justify-between rounded-lg bg-white shadow-md p-8 max-w-md w-full">
-    <h3 className="font-bold text-lg text-center mb-8">Execute Operation</h3> {/* Increased margin bottom */}
+  <div className="grid gap-4 auto-rows-min justify-between rounded-lg bg-white shadow-md p-8 max-w-md w-full h-fit">
+    <h3 className="font-bold text-lg text-center mb-8">Execute Operation</h3>
     <form onSubmit={submit}>
       <Input
         name="type"
@@ -55,7 +55,7 @@ function OperationForm() {
         value={operation?.type}
         onChange={handleChange}
       />
-      <h1 className="font-bold text-sm text-gray-700 mb-4"> {/* Added margin bottom */}
+      <h1 className="font-bold text-sm text-gray-700 mb-4">
         Allowed types: ADDITION, SUBTRACTION, MULTIPLY, DIVISION, SQUARE_ROOT, RANDOM_STRING
       </h1>
       <Input

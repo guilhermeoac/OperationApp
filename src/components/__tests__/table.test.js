@@ -6,7 +6,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Component } from 'react';
 import '@testing-library/jest-dom'
 
-// Mock the imported components and modules
 jest.mock('react-query', () => ({
   useQuery: jest.fn(),
 }));
