@@ -1,5 +1,6 @@
 import Input from "./Input";
 import TextButton from "./TextButton";
+import React from 'react';
 
 
 function TableFilter({columns, filter, handlerFilter, applyFilter, setApplyFilter}) {

@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Input({ label, type, placeholder, onChange, value, name, disable }) {
   return (
     <div className="flex flex-col w-full max-w-xs mb-4">

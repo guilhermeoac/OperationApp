@@ -1,4 +1,4 @@
-
+import React from 'react';
 function ImageButton({type, img, color, onClick, disable}) {
 
     const buttonClass = `rounded-full bg-${color}-600 cursor-pointer fill-white h-8 w-8`

@@ -1,4 +1,6 @@
 import { BiChevronsLeft, BiChevronLeft, BiChevronsRight, BiChevronRight } from "react-icons/bi";
+import React from 'react';
+
 
 
 function Pagination({filter, setPage, lastPage, setPageSize}) {

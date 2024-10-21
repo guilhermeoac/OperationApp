@@ -17,7 +17,7 @@ export const signInApi = async (body) => {
     const response = await axios.post(baseUrl + "/signin", body)
     return Promise.resolve({data: response.data, success: true})
   } catch (error) {
-    console.log("error" + error)
-    return {data: error.response.data, status: error.response.status, success: false}
+    console.log(error)
+    return {data: error?.response?.data, status: error?.response?.status, success: false}
   }
 }

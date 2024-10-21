@@ -1,3 +1,4 @@
+import React from 'react';
 
 function TextButton({label, type, color, disable, onClick}) {
   const buttonClass = `bg-blue-600 h-6 w-24 rounded text-white font-semibold`
