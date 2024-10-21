@@ -2,26 +2,29 @@ import TableFilter from "./TableFilter";
 import React, { useState } from 'react';
 import { BsArrowsVertical, BsArrowDown, BsArrowUp, BsSearch } from "react-icons/bs";
 import ImageButton from "./ImageButton";
-import Pagination from "../components/Pagination";
+import Pagination from "./Pagination";
 import { useQuery } from 'react-query';
 import Loading from "./Loading";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { Errorhandler } from './ErrorHandler'
+import { Errorhandler } from './ErrorHandler';
+
+import { IoAddSharp } from "react-icons/io5";
 
 function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam }) {
   const navigate = useNavigate();
   const [showFilter, setShowFilter] = useState(false);
   const [selectedLine, setSelectedLine] = useState({});
   const [applyFilter, setApplyFilter] = useState(true);
+
   const { isLoading, data } = useQuery([invalidateCacheParam, applyFilter, filter.pageNumber, filter.sortDirection, filter.pageSize], async () => await endpoint(filter), {
     onSettled: (data) => {
-      console.log(data);
       if (!data.success) {
         Errorhandler(data, navigate, toast);
       }
     }
   });
+
   const orderStates = ['none', 'ASC', 'DESC'];
 
   const nextOrder = (current, field) => {
@@ -48,34 +51,38 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
   };
 
   const formatFilterColumns = (columns) => {
-    console.log(columns)
-    console.log(columns.some((it) => it.name == "date"))
-
-    if (columns.some((it) => it.name == "date")) {
-      columns = columns.filter((it) => it.name != "date")
-      columns.push({ "name": "beginDate", "label": "Inicial date" }, { "name": "endDate", "label": "End date" })
+    if (columns.some(it => it.name === "date")) {
+      columns = columns.filter(it => it.name !== "date");
+      columns.push({ "name": "beginDate", "label": "Initial Date" }, { "name": "endDate", "label": "End Date" });
     }
-    console.log(columns)
     return columns;
-  }
+  };
 
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <div className='flex flex-row items-center p-4'>
+    <div className='flex flex-row items-start p-4'>
       <div className='flex flex-col items-center p-4'>
-        <div className="w-full max-w-6xl">
+        <div className="w-full max-w-6xl ">
           <div className="my-4">
-            {showFilter && <TableFilter columns={formatFilterColumns(columns)} filter={filter} handlerFilter={handlerFilter} setApplyFilter={setApplyFilter} applyFilter={applyFilter} />}
+            {showFilter && (
+              <TableFilter 
+                columns={formatFilterColumns(columns)} 
+                filter={filter} 
+                handlerFilter={handlerFilter} 
+                setApplyFilter={setApplyFilter} 
+                applyFilter={applyFilter} 
+              />
+            )}
           </div>
           <div className='overflow-x-auto'>
-            <table className='min-w-full bg-white border border-gray-200 rounded-lg shadow-sm'>
-              <thead className='bg-gray-100'>
+            <table className='min-w-6x1 bg-white border border-gray-200 rounded-lg shadow-md'>
+              <thead className='bg-gray-100 rounded-t-lg'>
                 <tr>
                   {columns.map((column) => (
-                    <th className='p-4 text-left border-b border-gray-200' key={column.name}>
+                    <th className='p-8 text-left border-b border-gray-300 font-semibold text-gray-700 text-sm uppercase tracking-wider' key={column.name}>
                       <div className='flex items-center justify-between cursor-pointer' onClick={() => nextOrder(filter.sortDirection, column.name)}>
                         <span>{column.label}</span>
                         <div className='flex items-center'>
@@ -91,13 +98,13 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
               <tbody>
                 {data.data.empty ? (
                   <tr>
-                    <td colSpan={columns.length} className='text-center p-4'>Nenhum Registro Encontrado</td>
+                    <td colSpan={columns.length} className='text-center p-4 text-gray-500'>No Records Found</td>
                   </tr>
                 ) : (
                   data.data.content.map((item) => (
                     <tr className={`cursor-pointer ${selectedLine.id === item.id ? 'bg-cyan-50' : 'hover:bg-gray-50'}`} key={item.id} onClick={() => setSelectedLine(item)}>
                       {columns.map((column) => (
-                        <td className='p-4 text-center border-b border-gray-200' key={column.name}>
+                        <td className='p-4 text-center border-b border-gray-300 text-sm' key={column.name}>
                           {column.name === 'date' ? formatDate(item[column.name]) : item[column.name]}
                         </td>
                       ))}
@@ -114,6 +121,7 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
       </div>
       <div className='flex flex-col p-5'>
         <ImageButton type="button" label="Filter" img={<BsSearch />} color="gray" onClick={() => setShowFilter(!showFilter)} />
+        <ImageButton type="button" label="Execute Operation" img={<IoAddSharp />} color="blue" onClick={() => navigate("/execute-operation")} />
       </div>
     </div>
   );

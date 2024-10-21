@@ -1,10 +1,10 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser, UserActionTypes } from "../redux/userReducer";
 import { setCookie } from 'react-use-cookie';
 import { IoArrowBackSharp } from "react-icons/io5";
 import ImageButton from "./ImageButton";
-import React from 'react';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -12,9 +12,9 @@ function Navbar() {
   const { currentUser } = useSelector((state) => state.userReducer);
 
   return (
-    <div className="flex justify-between items-center h-16 bg-black px-4">
+    <div className="flex justify-between items-center h-16 bg-black px-4 shadow-lg">
       <div className="flex items-center">
-        <ImageButton type="button" label="Filter" img={<IoArrowBackSharp />} color="black" onClick={() => navigate(-1)} />
+        <ImageButton type="button" label="Back" img={<IoArrowBackSharp />} color="white" onClick={() => navigate(-1)} />
       </div>
       {currentUser?.payload && (
         <div className="flex items-center">

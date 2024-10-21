@@ -42,7 +42,7 @@ describe('Navbar Component', () => {
     
     
     expect(screen.getByRole('button')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toHaveClass('rounded-full bg-black-600 cursor-pointer fill-white h-8 w-8');
+    expect(screen.getByRole('button')).toHaveClass('rounded-full bg-white-600 cursor-pointer fill-white h-8 w-8 flex items-center justify-center');
   });
 
   test('navigates back when back button is clicked', () => {

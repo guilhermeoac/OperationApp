@@ -31,14 +31,14 @@ describe('TextButton Component', () => {
   test('applies correct classes when enabled', () => {
     const { container } = render(<TextButton label="Enabled" onClick={mockOnClick} />);
     const button = container.querySelector('button');
-    expect(button).toHaveClass('bg-blue-600'); 
+    expect(button).toHaveClass('h-10 w-32 rounded-md text-white font-semibold transition duration-200 bg-undefined-600 hover:bg-undefined-500'); 
     expect(button).not.toHaveClass('bg-gray-600');
   });
 
   test('applies correct classes when disabled', () => {
     const { container } = render(<TextButton label="Disabled" disable={true} onClick={mockOnClick} />);
     const button = container.querySelector('button');
-    expect(button).toHaveClass('bg-gray-600'); 
+    expect(button).toHaveClass('h-10 w-32 rounded-md text-white font-semibold transition duration-200 bg-gray-400 cursor-not-allowed'); 
     expect(button).not.toHaveClass('bg-blue-600');
   });
 

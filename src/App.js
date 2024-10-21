@@ -12,12 +12,14 @@ import Record from './pages/Record';
 import Home from './pages/Home';
 import OperationForm from './pages/OperationForm';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <div className='font-sans text-base bg-slate-100 min-w-min'>
+      <div className='font-sans text-base bg-slate-100 min-w-screen'>
         <Router>
         <Navbar/>
         <ToastContainer 
