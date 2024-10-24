@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Errorhandler } from './../components/ErrorHandler'
-import { useMutation } from "react-query";
+import { useMutation } from 'react-query';
 import useCookie from 'react-use-cookie';
 import { useDispatch } from "react-redux";
 import { loginUser, UserActionTypes } from "../redux/userReducer";
 import TextButton from "../components/TextButton";
 import { signInApi } from "../service/publicUserService";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Input from "../components/Input";
 
 function Home() {
@@ -16,6 +16,12 @@ function Home() {
   const [user, setUser] = useState({ username: '', password: '' });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+      setUserToken(null);
+      setUserName(null);
+      dispatch(loginUser({type: UserActionTypes.LOGOUT}));
+    });
   
   const recordRoute = () => navigate(`/record`)
   
@@ -26,7 +32,7 @@ function Home() {
       if (response.success) {
         setUserToken(`Bearer ${response.data}`);
         setUserName(user.username);
-        dispatch(loginUser({type: UserActionTypes.LOGIN, payload: {}}));    
+        dispatch(loginUser({type: UserActionTypes.LOGIN, payload: {}}));
         recordRoute();
       } else {
         Errorhandler(response, navigate, toast);

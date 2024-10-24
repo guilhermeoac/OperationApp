@@ -1,29 +1,9 @@
 import Table from "../components/Table";
 import { useState } from 'react';
-import useCookie from 'react-use-cookie';
 import { getRecordListApi } from "../service/recordService";
-import { getUserByUsernameApi } from "../service/userService";
-import { useQuery } from 'react-query';
-import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import { Errorhandler } from './../components/ErrorHandler';
 
 function Record() {
-  const navigate = useNavigate();
-  const [balance, setBalance] = useState(0);
   const [filter, setFilter] = useState({ name: '', alias: '', unity: '', pageNumber: 0, pageSize: 10 });
-
-  useQuery(["user"], async () => {
-    return await getUserByUsernameApi();
-  }, {
-    onSettled: (data) => {
-      if (data.success) {
-        setBalance(data.data.balance);
-      } else {
-        Errorhandler(data, navigate, toast);
-      }
-    }
-  });
 
   const endpoint = async (filters) => await getRecordListApi(filters);
 
@@ -37,7 +17,6 @@ function Record() {
 
   return (
     <div className="flex flex-col items-center justify-start p-4 bg-gray-50 min-h-screen gap-4">
-      <h3 className="font-bold text-lg bg-white p-4 rounded-md shadow-md ring-2">Balance: {balance}</h3>
       <h3 className="font-bold text-lg">Records</h3>
       <div className="grid gap-1 justify-center w-full">
         <Table 

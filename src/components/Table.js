@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { BsArrowsVertical, BsArrowDown, BsArrowUp, BsSearch } from "react-icons/bs";
 import ImageButton from "./ImageButton";
 import Pagination from "./Pagination";
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import Loading from "./Loading";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { Errorhandler } from './ErrorHandler';
 
@@ -13,6 +13,7 @@ import { IoAddSharp } from "react-icons/io5";
 
 function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [showFilter, setShowFilter] = useState(false);
   const [selectedLine, setSelectedLine] = useState({});
   const [applyFilter, setApplyFilter] = useState(true);
@@ -22,6 +23,7 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
       if (!data.success) {
         Errorhandler(data, navigate, toast);
       }
+      queryClient.invalidateQueries({ queryKey: ['balance'] });
     }
   });
 
