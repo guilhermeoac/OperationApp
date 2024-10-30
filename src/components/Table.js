@@ -1,9 +1,10 @@
 import TableFilter from "./TableFilter";
 import React, { useState } from 'react';
 import { BsArrowsVertical, BsArrowDown, BsArrowUp, BsSearch } from "react-icons/bs";
+import { IoIosTrash } from "react-icons/io";
 import ImageButton from "./ImageButton";
 import Pagination from "./Pagination";
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
 import Loading from "./Loading";
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +12,7 @@ import { Errorhandler } from './ErrorHandler';
 
 import { IoAddSharp } from "react-icons/io5";
 
-function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam }) {
+function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam, deleteItemEndpoint }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showFilter, setShowFilter] = useState(false);
@@ -25,6 +26,16 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
       }
       queryClient.invalidateQueries({ queryKey: ['balance'] });
     }
+  });
+
+  const deleteItem = useMutation(deleteItemEndpoint, {
+    onSettled: (data) => {
+      console.log(data);
+      if (!data.success) {
+        Errorhandler(data, navigate, toast);
+      }
+      queryClient.invalidateQueries({ queryKey: [invalidateCacheParam] });
+    },
   });
 
   const orderStates = ['none', 'ASC', 'DESC'];
@@ -60,10 +71,11 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
     return columns;
   };
 
-  if (isLoading) {
+  if (isLoading || deleteItem.isLoading) {
     return <Loading />;
   }
 
+  console.log(deleteItem);
   return (
     <div className='flex flex-row items-start'>
       <div className='flex flex-col items-center'>
@@ -124,6 +136,7 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam 
       <div className='flex flex-col p-5'>
         <ImageButton type="button" label="Filter" img={<BsSearch />} color="gray" onClick={() => setShowFilter(!showFilter)} />
         <ImageButton type="button" label="Execute Operation" img={<IoAddSharp />} color="blue" onClick={() => navigate("/execute-operation")} />
+        <ImageButton type="button" label="Delete" img={<IoIosTrash />} color="gray" onClick={() => deleteItem.mutateAsync(selectedLine.id)} />
       </div>
     </div>
   );

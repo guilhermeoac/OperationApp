@@ -1,11 +1,12 @@
 import Table from "../components/Table";
 import { useState } from 'react';
-import { getRecordListApi } from "../service/recordService";
+import { getRecordListApi, deleteRecordApi } from "../service/recordService";
 
 function Record() {
   const [filter, setFilter] = useState({ name: '', alias: '', unity: '', pageNumber: 0, pageSize: 10 });
 
   const endpoint = async (filters) => await getRecordListApi(filters);
+  const deleteItem = async (id) => await deleteRecordApi(id);
 
   const columns = [
     { name: "operationType", label: "Operation", width: "80" },
@@ -25,6 +26,7 @@ function Record() {
           filter={filter}
           handlerFilter={setFilter}
           invalidateCacheParam="record"
+          deleteItemEndpoint={deleteItem}
         />
       </div>
     </div>

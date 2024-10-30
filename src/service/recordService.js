@@ -23,3 +23,12 @@ export const getRecordListApi = async (filter) => {
     return Promise.resolve({data: {empty: true, content: []}, status: error.response.status, error: error.response.data, status: error.response.status, success: false})
   }
 }
+
+  export const deleteRecordApi = async (id) => {
+    try {
+      await axios.delete(`${baseUrl}?id=${id}`, { headers: getAuthToken() })
+      return Promise.resolve({success: true})
+    } catch (error) {
+      return Promise.resolve({status: error.response.status, error: error.response.data, status: error.response.status, success: false})
+    }
+}
