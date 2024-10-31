@@ -5,12 +5,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, UserActionTypes } from '../../redux/userReducer';
 import Navbar from '../Navbar';
 
+
 import '@testing-library/jest-dom'
 import { setCookie } from 'react-use-cookie';
 import { IoArrowBackSharp } from 'react-icons/io5';
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
+}));
+
+
+jest.mock('react-query', () => ({
+  useQuery: jest.fn(() => Promise.resolve(mockData))
+}));
+
+const mockData = {
+  success: true,
+  data: {balance: 10}
+};
+
+jest.mock('../../service/userService', () => ({
+  getUserByUsernameApi: jest.fn()
 }));
 
 jest.mock('react-redux', () => ({

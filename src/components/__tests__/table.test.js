@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Table from './../Table';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Component } from 'react';
@@ -8,6 +8,8 @@ import '@testing-library/jest-dom'
 
 jest.mock('react-query', () => ({
   useQuery: jest.fn(),
+  useQueryClient: jest.fn(),
+  useMutation: jest.fn()
 }));
 
 jest.mock('./../TableFilter', () => () => <div>TableFilter Component</div>);
@@ -52,6 +54,10 @@ describe('Table Component', () => {
     useQuery.mockImplementation(() => ({
       isLoading: false,
       data: mockData,
+    }));
+    useMutation.mockImplementation(() => ({
+      isLoading: false,
+      data: {success: true},
     }));
   });
 
