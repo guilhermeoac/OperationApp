@@ -107,6 +107,11 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam,
                       </div>
                     </th>
                   ))}
+                    <th className='p-8 text-left border-b border-gray-300 font-semibold text-gray-700 text-sm uppercase tracking-wider' key="button">
+                      <div className='flex items-center justify-between cursor-pointer'>
+                        <span></span>
+                      </div>
+                    </th>
                 </tr>
               </thead>
               <tbody>
@@ -116,12 +121,17 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam,
                   </tr>
                 ) : (
                   data.data.content.map((item) => (
-                    <tr className={`cursor-pointer ${selectedLine.id === item.id ? 'bg-cyan-50' : 'hover:bg-gray-50'}`} key={item.id} onClick={() => setSelectedLine(item)}>
+                    <tr className={`${!item.active ? 'bg-gray-200' : 'hover:bg-gray-50'}`} key={item.id}>
                       {columns.map((column) => (
                         <td className='p-4 text-center border-b border-gray-300 text-sm' key={column.name}>
                           {column.name === 'date' ? formatDate(item[column.name]) : item[column.name]}
                         </td>
                       ))}
+                      <td  className='p-4 text-center border-b border-gray-300 text-sm' key="button">
+                        {item.active &&
+                          <ImageButton type="button" label="Delete" img={<IoIosTrash />} color="gray" onClick={() => deleteItem.mutateAsync(item.id)} />
+                        }
+                      </td>
                     </tr>
                   ))
                 )}
@@ -136,7 +146,6 @@ function Table({ columns, endpoint, filter, handlerFilter, invalidateCacheParam,
       <div className='flex flex-col p-5'>
         <ImageButton type="button" label="Filter" img={<BsSearch />} color="gray" onClick={() => setShowFilter(!showFilter)} />
         <ImageButton type="button" label="Execute Operation" img={<IoAddSharp />} color="blue" onClick={() => navigate("/execute-operation")} />
-        <ImageButton type="button" label="Delete" img={<IoIosTrash />} color="gray" onClick={() => deleteItem.mutateAsync(selectedLine.id)} />
       </div>
     </div>
   );
